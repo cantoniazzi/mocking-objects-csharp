@@ -50,6 +50,7 @@
     <Compile Include="domain\Auction.cs" />
     <Compile Include="domain\Bid.cs" />
     <Compile Include="domain\Payment.cs" />
+    <Compile Include="domain\SendEmail.cs" />
     <Compile Include="domain\User.cs" />
     <Compile Include="infra\AuctionRepository.cs" />
     <Compile Include="infra\FalseAuctionDAO.cs" />

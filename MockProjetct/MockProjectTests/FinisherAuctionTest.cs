@@ -28,16 +28,20 @@ namespace MockProjectTests
             
             //create the mock
             var dao = new Mock<AuctionRepository>();
+            var sendEmail = new Mock<SendEmail>();
 
             //tell mock to returns old auctions when call the currents auctions
             dao.Setup(a => a.Opened()).Returns(oldAuctions);
-            FinisherAuction finisher = new FinisherAuction(dao.Object);
+            FinisherAuction finisher = new FinisherAuction(dao.Object, sendEmail.Object);
             finisher.Finish();
 
             Assert.AreEqual(2, oldAuctions.Count);
             Assert.IsTrue(oldAuctions[0].closed);
             Assert.IsTrue(oldAuctions[1].closed);
 
+            //verify update auctions
+            dao.Verify(a => a.Update(auction1),Times.Once());
+            dao.Verify(a => a.Update(auction2),Times.Once());
         }
         
         [TestMethod]
@@ -57,10 +61,11 @@ namespace MockProjectTests
 
             //create the mock
             var dao = new Mock<AuctionRepository>();
+            var sendEmail = new Mock<SendEmail>();
 
             //tell mock to returns old auctions when call the currents auctions
             dao.Setup(a => a.Opened()).Returns(oldAuctions);
-            FinisherAuction finisher = new FinisherAuction(dao.Object);
+            FinisherAuction finisher = new FinisherAuction(dao.Object, sendEmail.Object);
             finisher.Finish();
 
             Assert.AreEqual(2, oldAuctions.Count);
@@ -73,13 +78,36 @@ namespace MockProjectTests
         {
             //create the mock
             var dao = new Mock<AuctionRepository>();
+            var sendEmail = new Mock<SendEmail>();
 
             //tell mock to returns old auctions when call the currents auctions
             dao.Setup(a => a.Opened()).Returns(new List<Auction>());
-            FinisherAuction finisher = new FinisherAuction(dao.Object);
+            FinisherAuction finisher = new FinisherAuction(dao.Object, sendEmail.Object);
             finisher.Finish();
 
             Assert.AreEqual(0,finisher.total);
+        }
+
+        [TestMethod]
+        public void ShouldNotUpdateFinishedAuctions()
+        {
+            DateTime date = DateTime.Today;
+
+            Auction auction1 = new Auction("Dvd player");
+            auction1.InDate(date);
+
+            List<Auction> listReturn = new List<Auction>();
+            listReturn.Add(auction1);
+
+            var dao = new Mock<AuctionRepository>();
+            var sendEmail = new Mock<SendEmail>();
+
+            dao.Setup(a => a.Opened()).Returns(listReturn);
+
+            FinisherAuction finisher = new FinisherAuction(dao.Object, sendEmail.Object);
+            finisher.Finish();
+
+            dao.Verify(a => a.Update(auction1),Times.Never());
         }
 
     }

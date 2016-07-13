@@ -9,10 +9,12 @@ namespace MockProjetct.service
     {
         public int total { get; set; }
         private AuctionRepository dao;
+        private SendEmail sendEmail;
 
-        public FinisherAuction(AuctionRepository dao)
+        public FinisherAuction(AuctionRepository dao, SendEmail sendEmail)
         {
             this.dao = dao;
+            this.sendEmail = sendEmail;
             this.total = 0;
         }
 
@@ -27,6 +29,7 @@ namespace MockProjetct.service
                     a.Finish();
                     this.total++;
                     dao.Update(a);
+                    this.sendEmail.Send(a);
                 }
             }
         }
