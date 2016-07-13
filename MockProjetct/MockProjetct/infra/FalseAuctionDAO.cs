@@ -1,12 +1,43 @@
-﻿using System;
+﻿using MockProjetct.domain;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System;
 
 namespace MockProjetct.infra
 {
-    class FalseAuctionDAO
+    public class FalseAuctionDAO : AuctionRepository
     {
+        private static List<Auction> auctions = new List<Auction>();
+
+        public List<Auction> Closed()
+        {
+            List<Auction> filtered = new List<Auction>();
+            foreach (var a in auctions)
+            {
+                if (a.closed)
+                    filtered.Add(a);
+            }
+            return filtered;
+        }
+
+        public List<Auction> Opened()
+        {
+            List<Auction> opened = new List<Auction>();
+
+            foreach (var a in auctions)
+            {
+                if (!a.closed)
+                    opened.Add(a);
+            }
+
+            return opened;
+        }
+
+        public void Save(Auction auction)
+        {
+            auctions.Add(auction);
+        }
+
+        public virtual void Update(Auction auction) { }
+
     }
 }

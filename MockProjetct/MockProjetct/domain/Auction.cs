@@ -1,24 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MockProjetct.domain
 {
     public class Auction
     {
         public string description { get; set; }
-        public DateTime data { get; set; }
+        public DateTime date { get; set; }
         public List<Bid> bids{ get; private set; }
-        public bool finished { get; set; }
+        public bool closed { get; set; }
         public int id { get; set; }
 
         public Auction (string description)
         {
             this.description = description;
             this.bids = new List<Bid>();
-            this.data = DateTime.Today;
+            this.date = DateTime.Today;
         }
 
         /// <summary>
@@ -75,12 +72,12 @@ namespace MockProjetct.domain
         /// </summary>
         public void Finish()
         {
-            this.finished = true;
+            this.closed = true;
         }
 
-        public void InDate(DateTime data)
+        public void InDate(DateTime date)
         {
-            this.data = data;
+            this.date = date;
         }
 
     }
