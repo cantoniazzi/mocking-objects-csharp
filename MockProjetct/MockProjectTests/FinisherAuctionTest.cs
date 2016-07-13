@@ -100,11 +100,11 @@ namespace MockProjectTests
             listReturn.Add(auction1);
 
             var dao = new Mock<AuctionRepository>();
-            var sendEmail = new Mock<SendEmail>();
+            var fakeSendEmail = new Mock<SendEmail>();
 
             dao.Setup(a => a.Opened()).Returns(listReturn);
 
-            FinisherAuction finisher = new FinisherAuction(dao.Object, sendEmail.Object);
+            FinisherAuction finisher = new FinisherAuction(dao.Object, fakeSendEmail.Object);
             finisher.Finish();
 
             dao.Verify(a => a.Update(auction1),Times.Never());

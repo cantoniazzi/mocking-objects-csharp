@@ -4,7 +4,7 @@ using System;
 
 namespace MockProjetct.infra
 {
-    public class FalseAuctionDAO : AuctionRepository
+    public class FakeAuctionDAO : AuctionRepository
     {
         private static List<Auction> auctions = new List<Auction>();
 
