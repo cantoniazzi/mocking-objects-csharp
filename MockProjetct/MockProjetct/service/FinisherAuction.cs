@@ -26,10 +26,18 @@ namespace MockProjetct.service
             {
                 if (this.StartLasWeek(a))
                 {
-                    a.Finish();
-                    this.total++;
-                    dao.Update(a);
-                    this.sendEmail.Send(a);
+                    try
+                    {
+                        a.Finish();
+                        this.total++;
+                        dao.Update(a);
+                        this.sendEmail.Send(a);
+                    }
+                    catch (Exception)
+                    {
+
+                        //save log
+                    }
                 }
             }
         }

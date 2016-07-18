@@ -8,7 +8,7 @@ namespace MockProjetct.infra
     {
         private static List<Auction> auctions = new List<Auction>();
 
-        public List<Auction> Closed()
+        public virtual List<Auction> Closed()
         {
             List<Auction> filtered = new List<Auction>();
             foreach (var a in auctions)
@@ -19,7 +19,7 @@ namespace MockProjetct.infra
             return filtered;
         }
 
-        public List<Auction> Opened()
+        public virtual List<Auction> Opened()
         {
             List<Auction> opened = new List<Auction>();
 

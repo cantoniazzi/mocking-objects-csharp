@@ -110,5 +110,119 @@ namespace MockProjectTests
             dao.Verify(a => a.Update(auction1),Times.Never());
         }
 
+        [TestMethod]
+        public void ShouldExecuteEvenWhenDAOFail()
+        {
+            DateTime date = new DateTime(2014, 05, 05);
+
+            Auction auction1 = new Auction("TV");
+            auction1.InDate(date);
+
+            Auction auction2 = new Auction("DiskMan");
+            auction2.InDate(date);
+
+            List<Auction> listReturn = new List<Auction>();
+            listReturn.Add(auction1);
+            listReturn.Add(auction2);
+
+            var dao = new Mock<AuctionRepository>();
+            dao.Setup(a => a.Opened()).Returns(listReturn);
+
+            var sendEmail = new Mock<SendEmail>();
+
+            dao.Setup(a => a.Update(auction1)).Throws(new Exception());
+
+            FinisherAuction finisher = new FinisherAuction(dao.Object, sendEmail.Object);
+            finisher.Finish();
+
+            dao.Verify(a => a.Update(auction2));
+            sendEmail.Verify(s => s.Send(auction2));
+
+            sendEmail.Verify(s => s.Send(auction1), Times.Never());
+        }
+    
+        [TestMethod]
+        public void ShouldExecuteEvenWhenSendEmailFail()
+        {
+            DateTime date = new DateTime(2014, 05, 05);
+
+            Auction auction1 = new Auction("Playstation");
+            auction1.InDate(date);
+            Auction auction2 = new Auction("Super Nes");
+            auction2.InDate(date);
+
+            List<Auction> listReturn = new List<Auction>();
+            listReturn.Add(auction1);
+            listReturn.Add(auction2);
+
+            var dao = new Mock<AuctionRepository>();
+            dao.Setup(a => a.Opened()).Returns(listReturn);
+
+            var sendEmail = new Mock<SendEmail>();
+            sendEmail.Setup(s => s.Send(auction1)).Throws(new Exception());
+            
+            FinisherAuction finisher = new FinisherAuction(dao.Object, sendEmail.Object);
+            finisher.Finish();
+
+            dao.Verify(a => a.Update(auction2));
+            sendEmail.Verify(s => s.Send(auction2));
+        }
+
+        [TestMethod]
+        public void DontCallSendEmailWhenAllAuctionFail()
+        {
+            DateTime date = new DateTime(2014, 05, 05);
+
+            Auction auction1 = new Auction("Playstation");
+            auction1.InDate(date);
+            Auction auction2 = new Auction("Super Nes");
+            auction2.InDate(date);
+
+            List<Auction> listReturn = new List<Auction>();
+            listReturn.Add(auction1);
+            listReturn.Add(auction2);
+
+            var dao = new Mock<AuctionRepository>();
+            dao.Setup(a => a.Opened()).Returns(listReturn);
+
+            var sendEmail = new Mock<SendEmail>();
+
+            dao.Setup(a => a.Update(auction1)).Throws(new Exception());
+            dao.Setup(a => a.Update(auction2)).Throws(new Exception());
+
+            FinisherAuction finisher = new FinisherAuction(dao.Object, sendEmail.Object);
+            finisher.Finish();
+
+            sendEmail.Verify(s => s.Send(auction1), Times.Never());
+            sendEmail.Verify(s => s.Send(auction2), Times.Never());
+        }
+
+        [TestMethod]
+        public void DontCallSendEmailWhenAnyAuctionFail()
+        {
+            DateTime date = new DateTime(2014, 05, 05);
+
+            Auction auction1 = new Auction("Playstation");
+            auction1.InDate(date);
+            Auction auction2 = new Auction("Super Nes");
+            auction2.InDate(date);
+
+            List<Auction> listReturn = new List<Auction>();
+            listReturn.Add(auction1);
+            listReturn.Add(auction2);
+
+            var dao = new Mock<AuctionRepository>();
+            dao.Setup(a => a.Opened()).Returns(listReturn);
+
+            var sendEmail = new Mock<SendEmail>();
+
+            dao.Setup(a => a.Update(auction1)).Throws(new Exception());
+            dao.Setup(a => a.Update(auction2)).Throws(new Exception());
+
+            FinisherAuction finisher = new FinisherAuction(dao.Object, sendEmail.Object);
+            finisher.Finish();
+
+            sendEmail.Verify(s => s.Send(It.IsAny<Auction>()), Times.Never());
+        }
     }
 }

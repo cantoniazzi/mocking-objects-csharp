@@ -59,6 +59,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="FinisherAuctionTest.cs" />
+    <Compile Include="PaymentGeneratorTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

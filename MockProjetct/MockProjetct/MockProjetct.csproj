@@ -54,8 +54,10 @@
     <Compile Include="domain\User.cs" />
     <Compile Include="infra\AuctionRepository.cs" />
     <Compile Include="infra\FakeAuctionDAO.cs" />
+    <Compile Include="infra\PaymentDAO.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="service\FinisherAuction.cs" />
+    <Compile Include="service\PaymentGenerator.cs" />
     <Compile Include="service\Rater.cs" />
   </ItemGroup>
   <ItemGroup>
